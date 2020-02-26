@@ -1,59 +1,14 @@
 import React from 'react';
 
+import Row from './Row';
+import AddRowButton from './AddRowButton';
+import AddColButton from './AddColButton';
+import RemoveColButton from './RemoveColButton';
+import RemoveRowButton from './RemoveRowButton';
+
 const DEFAULT_PADDING = 41;
 
-const Cell = () => (<td></td>);
-
-const Row = (props) => {
-    const cells = props.cells.map(({ y }) => <Cell key={y}/>);
-    return (<tr>{cells}</tr>)
-};
-
-const AddColBtn = (props) => {
-    return (
-        <div className="add right button" onClick={props.onClick} >
-            +
-        </div>
-    );
-}
-
-const AddRowBtn = (props) => {
-    return (
-        <div className="add bottom button" onClick={props.onClick} >
-            +
-        </div>
-    );
-}
-
-const RemoveColBtn = (props) => {
-    return (
-        <div
-            className="remove top button"
-            style={{ left: `${props.offsetLeft}px` }}
-            onMouseLeave={props.onMouseLeave}
-            onClick={props.onClick}
-        >
-            -
-        </div>
-    );
-}
-
-const RemoveRowBtn = (props) => {
-    return (
-        <div
-            className="remove left button"
-            style={{ top: `${props.offsetTop}px` }}
-            onMouseLeave={props.onMouseLeave}
-            onClick={props.onClick}
-        >
-            -
-        </div>
-    );
-}
-
-class SquaresBuilder extends React.Component {
-    table;
-
+class Builder extends React.Component {
     constructor(props) {
         super(props);
 
@@ -102,6 +57,8 @@ class SquaresBuilder extends React.Component {
     handleRemoveRowButtonClick() {
         this.setState(prev => ({
             ...prev,
+            isRemoveRowBtnVisible: false,
+            isRemoveColBtnVisible: false,
             matrix: this.state.matrix.filter((v, i) => i !== this.state.x),
         }));
     }
@@ -110,7 +67,12 @@ class SquaresBuilder extends React.Component {
         const matrix = this.state.matrix.map(row => {
             return row.filter((v, i) => i !== this.state.y);
         });
-        this.setState(prev => ({ ...prev, matrix }))
+        this.setState(prev => ({
+            ...prev,
+            isRemoveRowBtnVisible: false,
+            isRemoveColBtnVisible: false,
+            matrix
+        }))
     }
 
     handleMouseOver(event) {
@@ -154,14 +116,14 @@ class SquaresBuilder extends React.Component {
                     </table>
                 </div>
 
-                <AddColBtn onClick={this.handleAddColButtonClick} />
-                <AddRowBtn onClick={this.handleAddRowButtonClick} />
+                <AddRowButton onClick={this.handleAddRowButtonClick} />
+                <AddColButton onClick={this.handleAddColButtonClick} />
 
-                {this.state.isRemoveColBtnVisible && <RemoveColBtn offsetLeft={this.state.offsetLeft} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveColButtonClick} />}
-                {this.state.isRemoveRowBtnVisible && <RemoveRowBtn offsetTop={this.state.offsetTop} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveRowButtonClick} />}
+                {this.state.isRemoveRowBtnVisible && <RemoveRowButton offsetTop={this.state.offsetTop} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveRowButtonClick} />}
+                {this.state.isRemoveColBtnVisible && <RemoveColButton offsetLeft={this.state.offsetLeft} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveColButtonClick} />}
             </div>
         )
     }
 }
 
-export default SquaresBuilder;
+export default Builder;

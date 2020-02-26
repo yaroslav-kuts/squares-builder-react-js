@@ -1,13 +1,11 @@
 import React from 'react';
-import './App.css';
 
-import './SquaresBuilder';
-import SquaresBuilder from './SquaresBuilder';
+import Builder from './components/Builder';
 
 function App() {
   return (
     <div className="App">
-          <SquaresBuilder initialWidth='4' initialHeight='4'/>
+          <Builder initialWidth='4' initialHeight='4'/>
     </div>
   );
 }
