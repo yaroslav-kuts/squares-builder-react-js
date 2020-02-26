@@ -9,6 +9,22 @@ const Row = (props) => {
     return (<tr>{cells}</tr>)
 };
 
+const AddColBtn = (props) => {
+    return (
+        <div className="add right button" onClick={props.onClick} >
+            +
+        </div>
+    );
+}
+
+const AddRowBtn = (props) => {
+    return (
+        <div className="add bottom button" onClick={props.onClick} >
+            +
+        </div>
+    );
+}
+
 const RemoveColBtn = (props) => {
     return (
         <div
@@ -57,21 +73,30 @@ class SquaresBuilder extends React.Component {
         this.handleMouseOver = this.handleMouseOver.bind(this);
         this.handleMouseLeave = this.handleMouseLeave.bind(this);
 
+        this.handleAddRowButtonClick = this.handleAddRowButtonClick.bind(this);
+        this.handleAddColButtonClick = this.handleAddColButtonClick.bind(this);
+
         this.handleRemoveRowButtonClick = this.handleRemoveRowButtonClick.bind(this);
         this.handleRemoveColButtonClick = this.handleRemoveColButtonClick.bind(this);
     }
 
-    // addRow() {
-    //     const height = this.state.matrix.length;
-    //     const width = this.state.matrix[0].length;
+    handleAddColButtonClick() {
+        const width = this.state.matrix[0].length;
 
-    //     const row = [...Array(width)].map((v, y) => ({ x: height, y }));
+        const matrix = this.state.matrix.map((row, x) => [...row, { x, y: width }])
 
-    //     this.setState(prev => ({
-    //         ...prev,
-    //         matrix: this.state.matrix.push(row),
-    //     }));
-    // }
+        this.setState(prev => ({ ...prev, matrix }));
+    }
+
+    handleAddRowButtonClick() {
+        const height = this.state.matrix.length;
+        const width = this.state.matrix[0].length;
+
+        const row = [...Array(width)].map((v, y) => ({ x: height, y }));
+        const matrix = [...this.state.matrix, row];
+
+        this.setState(prev => ({ ...prev, matrix }));
+    }
 
     handleRemoveRowButtonClick() {
         this.setState(prev => ({
@@ -125,8 +150,10 @@ class SquaresBuilder extends React.Component {
                         <tbody>{rows}</tbody>
                     </table>
                 </div>
-                <div className="add right button">+</div>
-                <div className="add bottom button">+</div>
+
+                <AddColBtn onClick={this.handleAddColButtonClick}/>
+                <AddRowBtn onClick={this.handleAddRowButtonClick}/>
+
                 {this.state.isRemoveBtnsVisible && <RemoveColBtn offsetLeft={this.state.offsetLeft} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveColButtonClick} />}
                 {this.state.isRemoveBtnsVisible && <RemoveRowBtn offsetTop={this.state.offsetTop} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveRowButtonClick} />}
             </div>
