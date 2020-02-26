@@ -36,6 +36,7 @@ class SquaresBuilder extends React.Component {
         };
 
         this.handleMouseOver = this.handleMouseOver.bind(this);
+        this.handleMouseLeave = this.handleMouseLeave.bind(this);
     }
 
     handleMouseOver(event) {
@@ -56,6 +57,11 @@ class SquaresBuilder extends React.Component {
         }));
     }
 
+    handleMouseLeave(event) {
+        if (event.relatedTarget.classList.contains('remove')) return;
+        this.setState(prev => ({ ...prev, isRemoveBtnsVisible: false }));
+    }
+
     render() {
         const height = this.state.height;
         const width = this.state.width;
@@ -64,7 +70,10 @@ class SquaresBuilder extends React.Component {
 
         return (
             <div className="main" >
-                <div className="table" onMouseOver={this.handleMouseOver}>
+                <div className="table"
+                    onMouseOver={this.handleMouseOver}
+                    onMouseLeave={this.handleMouseLeave}
+                >
                     <table>
                         <tbody>{rows}</tbody>
                     </table>
