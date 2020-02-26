@@ -10,13 +10,27 @@ const Row = (props) => {
 };
 
 const RemoveColBtn = (props) => {
-    const style = { left: `${props.offsetLeft}px` };
-    return (<div className="remove top button" style={style}>-</div>);
+    return (
+        <div
+            className="remove top button"
+            style={{ left: `${props.offsetLeft}px` }}
+            onMouseLeave={props.onMouseLeave}
+        >
+            -
+        </div>
+    );
 }
 
 const RemoveRowBtn = (props) => {
-    const style = { top: `${props.offsetTop}px` };
-    return (<div className="remove left button" style={style}>-</div>);
+    return (
+        <div
+            className="remove left button"
+            style={{ top: `${props.offsetTop}px` }}
+            onMouseLeave={props.onMouseLeave}
+        >
+            -
+        </div>
+    );
 }
 
 class SquaresBuilder extends React.Component {
@@ -80,8 +94,8 @@ class SquaresBuilder extends React.Component {
                 </div>
                 <div className="add right button">+</div>
                 <div className="add bottom button">+</div>
-                {this.state.isRemoveBtnsVisible && <RemoveColBtn offsetLeft={this.state.offsetLeft} />}
-                {this.state.isRemoveBtnsVisible && <RemoveRowBtn offsetTop={this.state.offsetTop} />}
+                {this.state.isRemoveBtnsVisible && <RemoveColBtn offsetLeft={this.state.offsetLeft} onMouseLeave={this.handleMouseLeave} />}
+                {this.state.isRemoveBtnsVisible && <RemoveRowBtn offsetTop={this.state.offsetTop} onMouseLeave={this.handleMouseLeave} />}
             </div>
         )
     }
