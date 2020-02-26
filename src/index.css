@@ -1,13 +1,63 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.main {
+    position: relative;
+    display: inline-block;
+    padding: 40px;
+}
+
+.main .table {
+    position: relative;
+    display: block;
+    border: 1px solid #48AAE6;
+}
+
+.main .add {
+    background-color: #F6C052;
+}
+
+.main .remove {
+    background-color: #B20000;
+}
+
+.main .button {
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px;
+    color: white;
+    font-weight: bold;
+}
+
+.main .add.bottom {
+    left: 43px;
+    bottom: 0px;
+}
+
+.main .add.right {
+    right: 0px;
+    top: 43px;
+}
+
+.main .remove.top {
+    left: 43px;
+    top: 0px;
+}
+
+.main .remove.left {
+    left: 0px;
+    top: 43px;
+}
+
+.main .table table td {
+    height: 40px;
+    width: 40px;
+    padding: 0px;
+    margin: 0px;
+    background-color: #48AAE6;
 }
