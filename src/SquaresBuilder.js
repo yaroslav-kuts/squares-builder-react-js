@@ -62,12 +62,13 @@ class SquaresBuilder extends React.Component {
         });
 
         this.state = {
+            matrix,
             x: -1,
             y: -1,
-            matrix,
             offsetLeft: DEFAULT_PADDING,
             offsetTop: DEFAULT_PADDING,
-            isRemoveBtnsVisible: false,
+            isRemoveRowBtnVisible: false,
+            isRemoveColBtnVisible: false,
         };
 
         this.handleMouseOver = this.handleMouseOver.bind(this);
@@ -127,14 +128,19 @@ class SquaresBuilder extends React.Component {
             y,
             offsetLeft,
             offsetTop,
-            isRemoveBtnsVisible: true,
+            isRemoveRowBtnVisible: this.state.matrix.length > 1,
+            isRemoveColBtnVisible: this.state.matrix[0].length > 1,
         }));
     }
 
     handleMouseLeave(event) {
         const classList = event.relatedTarget.classList;
         if (classList && classList.contains('remove')) return;
-        this.setState(prev => ({ ...prev, isRemoveBtnsVisible: false }));
+        this.setState(prev => ({
+            ...prev,
+            isRemoveRowBtnVisible: false,
+            isRemoveColBtnVisible: false,
+        }));
     }
 
     render() {
@@ -142,20 +148,17 @@ class SquaresBuilder extends React.Component {
 
         return (
             <div className="main" >
-                <div className="table"
-                    onMouseOver={this.handleMouseOver}
-                    onMouseLeave={this.handleMouseLeave}
-                >
+                <div className="table" onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>
                     <table>
                         <tbody>{rows}</tbody>
                     </table>
                 </div>
 
-                <AddColBtn onClick={this.handleAddColButtonClick}/>
-                <AddRowBtn onClick={this.handleAddRowButtonClick}/>
+                <AddColBtn onClick={this.handleAddColButtonClick} />
+                <AddRowBtn onClick={this.handleAddRowButtonClick} />
 
-                {this.state.isRemoveBtnsVisible && <RemoveColBtn offsetLeft={this.state.offsetLeft} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveColButtonClick} />}
-                {this.state.isRemoveBtnsVisible && <RemoveRowBtn offsetTop={this.state.offsetTop} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveRowButtonClick} />}
+                {this.state.isRemoveColBtnVisible && <RemoveColBtn offsetLeft={this.state.offsetLeft} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveColButtonClick} />}
+                {this.state.isRemoveRowBtnVisible && <RemoveRowBtn offsetTop={this.state.offsetTop} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveRowButtonClick} />}
             </div>
         )
     }
