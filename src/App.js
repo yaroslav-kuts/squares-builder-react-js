@@ -7,7 +7,7 @@ import SquaresBuilder from './SquaresBuilder';
 function App() {
   return (
     <div className="App">
-          <SquaresBuilder initialWidth='5' initialHeight='5'/>
+          <SquaresBuilder initialWidth='4' initialHeight='4'/>
     </div>
   );
 }
