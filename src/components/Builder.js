@@ -1,10 +1,7 @@
 import React from 'react';
 
 import Row from './Row';
-import AddRowButton from './AddRowButton';
-import AddColButton from './AddColButton';
-import RemoveColButton from './RemoveColButton';
-import RemoveRowButton from './RemoveRowButton';
+import Button from './Button';
 
 const DEFAULT_PADDING = 41;
 
@@ -112,16 +109,28 @@ class Builder extends React.Component {
                     </table>
                 </div>
 
-                <AddRowButton onClick={this.handleAddRowButtonClick} />
-                <AddColButton onClick={this.handleAddColButtonClick} />
+                <Button
+                    side="bottom"
+                    action="add"
+                    onClick={this.handleAddRowButtonClick}
+                />
+                <Button
+                    side="right"
+                    action="add"
+                    onClick={this.handleAddColButtonClick}
+                />
 
-                {isRemoveRowBtnVisible && <RemoveRowButton
-                    offsetTop={offsetTop}
+                {isRemoveRowBtnVisible && <Button
+                    side="top"
+                    action="remove"
+                    offset={offsetTop}
                     onMouseLeave={this.handleMouseLeave}
                     onClick={this.handleRemoveRowButtonClick}
                 />}
-                {isRemoveColBtnVisible && <RemoveColButton
-                    offsetLeft={offsetLeft}
+                {isRemoveColBtnVisible && <Button
+                    side="left"
+                    action="remove"
+                    offset={offsetLeft}
                     onMouseLeave={this.handleMouseLeave}
                     onClick={this.handleRemoveColButtonClick}
                 />}

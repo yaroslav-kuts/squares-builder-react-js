@@ -45,13 +45,13 @@ body {
 }
 
 .main .remove.top {
-    left: 43px;
+    left: 0px;
     top: 0px;
 }
 
 .main .remove.left {
     left: 0px;
-    top: 43px;
+    top: 0px;
 }
 
 .main .table table td {
