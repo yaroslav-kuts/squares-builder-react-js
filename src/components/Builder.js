@@ -37,42 +37,45 @@ class Builder extends React.Component {
     }
 
     handleAddColButtonClick() {
-        const width = this.state.matrix[0].length;
-
-        const matrix = this.state.matrix.map((row, x) => [...row, { x, y: width }])
-
-        this.setState(prev => ({ ...prev, matrix }));
+        this.setState(prev => {
+            const width = prev.matrix[0].length;
+            const matrix = prev.matrix.map((row, x) => [...row, { x, y: width }])
+            return { matrix };
+        });
     }
 
     handleAddRowButtonClick() {
-        const height = this.state.matrix.length;
-        const width = this.state.matrix[0].length;
+        this.setState(prev => {
+            const height = prev.matrix.length;
+            const width = prev.matrix[0].length;
 
-        const row = [...Array(width)].map((v, y) => ({ x: height, y }));
-        const matrix = [...this.state.matrix, row];
+            const row = [...Array(width)].map((v, y) => ({ x: height, y }));
+            const matrix = [...prev.matrix, row];
 
-        this.setState(prev => ({ ...prev, matrix }));
+            return { matrix };
+        });
     }
 
     handleRemoveRowButtonClick() {
         this.setState(prev => ({
-            ...prev,
             isRemoveRowBtnVisible: false,
             isRemoveColBtnVisible: false,
-            matrix: this.state.matrix.filter((v, i) => i !== this.state.x),
+            matrix: prev.matrix.filter((v, i) => i !== prev.x),
         }));
     }
 
     handleRemoveColButtonClick() {
-        const matrix = this.state.matrix.map(row => {
-            return row.filter((v, i) => i !== this.state.y);
+        this.setState(prev => {
+            const matrix = prev.matrix.map(row => {
+                return row.filter((v, i) => i !== prev.y);
+            });
+
+            return {
+                isRemoveRowBtnVisible: false,
+                isRemoveColBtnVisible: false,
+                matrix,
+            }
         });
-        this.setState(prev => ({
-            ...prev,
-            isRemoveRowBtnVisible: false,
-            isRemoveColBtnVisible: false,
-            matrix
-        }))
     }
 
     handleMouseOver(event) {
@@ -85,21 +88,19 @@ class Builder extends React.Component {
         const offsetTop = DEFAULT_PADDING + event.target.offsetTop;
 
         this.setState(prev => ({
-            ...prev,
             x,
             y,
             offsetLeft,
             offsetTop,
-            isRemoveRowBtnVisible: this.state.matrix.length > 1,
-            isRemoveColBtnVisible: this.state.matrix[0].length > 1,
+            isRemoveRowBtnVisible: prev.matrix.length > 1,
+            isRemoveColBtnVisible: prev.matrix[0].length > 1,
         }));
     }
 
     handleMouseLeave(event) {
         const classList = event.relatedTarget.classList;
         if (classList && classList.contains('remove')) return;
-        this.setState(prev => ({
-            ...prev,
+        this.setState(() => ({
             isRemoveRowBtnVisible: false,
             isRemoveColBtnVisible: false,
         }));
