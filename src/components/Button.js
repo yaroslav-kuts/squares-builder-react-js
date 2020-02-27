@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const signs = { add: '+', remove: '-' };
 
@@ -15,6 +16,14 @@ const Button = ({
             {signs[action]}
         </div>
     );
+}
+
+Button.propTypes = {
+    action: PropTypes.oneOf(['add', 'remove']),
+    side: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
+    offset: PropTypes.number,
+    onMouseLeave: PropTypes.func,
+    onClick: PropTypes.func,
 }
 
 export default Button;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Row from './Row';
 import Button from './Button';
@@ -17,8 +18,8 @@ class Builder extends React.Component {
             matrix,
             rowIndex: -1,
             cellIndex: -1,
-            offsetLeft: DEFAULT_PADDING,
-            offsetTop: DEFAULT_PADDING,
+            offsetLeft: 0,
+            offsetTop: 0,
             isRemoveRowBtnVisible: false,
             isRemoveColBtnVisible: false,
         };
@@ -137,6 +138,12 @@ class Builder extends React.Component {
             </div>
         )
     }
+}
+
+Builder.propTypes = {
+    initialWidth: PropTypes.number,
+    initialHeight: PropTypes.number,
+    cellSize: PropTypes.number,
 }
 
 export default Builder;
