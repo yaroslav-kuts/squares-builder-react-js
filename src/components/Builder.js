@@ -25,18 +25,9 @@ class Builder extends React.Component {
             isRemoveRowBtnVisible: false,
             isRemoveColBtnVisible: false,
         };
-
-        this.handleMouseOver = this.handleMouseOver.bind(this);
-        this.handleMouseLeave = this.handleMouseLeave.bind(this);
-
-        this.handleAddRowButtonClick = this.handleAddRowButtonClick.bind(this);
-        this.handleAddColButtonClick = this.handleAddColButtonClick.bind(this);
-
-        this.handleRemoveRowButtonClick = this.handleRemoveRowButtonClick.bind(this);
-        this.handleRemoveColButtonClick = this.handleRemoveColButtonClick.bind(this);
     }
 
-    handleAddColButtonClick() {
+    handleAddColButtonClick = () => {
         this.setState(prev => {
             const width = prev.matrix[0].length;
             const matrix = prev.matrix.map((row, x) => [...row, { x, y: width }])
@@ -44,7 +35,7 @@ class Builder extends React.Component {
         });
     }
 
-    handleAddRowButtonClick() {
+    handleAddRowButtonClick = () => {
         this.setState(prev => {
             const height = prev.matrix.length;
             const width = prev.matrix[0].length;
@@ -56,7 +47,7 @@ class Builder extends React.Component {
         });
     }
 
-    handleRemoveRowButtonClick() {
+    handleRemoveRowButtonClick = () => {
         this.setState(prev => ({
             isRemoveRowBtnVisible: false,
             isRemoveColBtnVisible: false,
@@ -64,7 +55,7 @@ class Builder extends React.Component {
         }));
     }
 
-    handleRemoveColButtonClick() {
+    handleRemoveColButtonClick = () => {
         this.setState(prev => {
             const matrix = prev.matrix.map(row => {
                 return row.filter((v, i) => i !== prev.y);
@@ -78,7 +69,7 @@ class Builder extends React.Component {
         });
     }
 
-    handleMouseOver(event) {
+    handleMouseOver = (event) => {
         if (!(event.target instanceof HTMLTableCellElement)) return;
 
         const x = event.target.parentNode.rowIndex;
@@ -97,7 +88,7 @@ class Builder extends React.Component {
         }));
     }
 
-    handleMouseLeave(event) {
+    handleMouseLeave = (event) => {
         const classList = event.relatedTarget.classList;
         if (classList && classList.contains('remove')) return;
         this.setState(() => ({
