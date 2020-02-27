@@ -12,14 +12,14 @@ class Builder extends React.Component {
     constructor(props) {
         super(props);
 
-        const matrix = [...Array(+props.initialHeight)].map((v, x) => {
-            return [...Array(+props.initialWidth)].map((v, y) => ({ x, y }))
+        const matrix = [...Array(+props.initialHeight)].map((v, rowIndex) => {
+            return [...Array(+props.initialWidth)].map((v, cellIndex) => ({ rowIndex, cellIndex }))
         });
 
         this.state = {
             matrix,
-            x: -1,
-            y: -1,
+            rowIndex: -1,
+            cellIndex: -1,
             offsetLeft: DEFAULT_PADDING,
             offsetTop: DEFAULT_PADDING,
             isRemoveRowBtnVisible: false,
@@ -28,91 +28,103 @@ class Builder extends React.Component {
     }
 
     handleAddColButtonClick = () => {
-        this.setState(prev => {
-            const width = prev.matrix[0].length;
-            const matrix = prev.matrix.map((row, x) => [...row, { x, y: width }])
-            return { matrix };
+        this.setState(({ matrix }) => {
+            const { cellIndex } = matrix[0][matrix[0].length - 1];
+            return { matrix: matrix.map((row, rowIndex) => [...row, {
+                rowIndex, cellIndex: cellIndex + 1
+            }]) };
         });
     }
 
     handleAddRowButtonClick = () => {
-        this.setState(prev => {
-            const height = prev.matrix.length;
-            const width = prev.matrix[0].length;
-
-            const row = [...Array(width)].map((v, y) => ({ x: height, y }));
-            const matrix = [...prev.matrix, row];
-
-            return { matrix };
+        this.setState(({ matrix }) => {
+            const { rowIndex } = matrix[matrix.length - 1][0];
+            const row = [...Array(matrix[0].length)].map((v, cellIndex) => ({
+                rowIndex: rowIndex + 1, cellIndex,
+            }));
+            return { matrix: [...matrix, row] };
         });
     }
 
     handleRemoveRowButtonClick = () => {
-        this.setState(prev => ({
+        this.setState(({ matrix, rowIndex }) => ({
             isRemoveRowBtnVisible: false,
             isRemoveColBtnVisible: false,
-            matrix: prev.matrix.filter((v, i) => i !== prev.x),
+            matrix: matrix.filter((v, i) => i !== rowIndex),
         }));
     }
 
     handleRemoveColButtonClick = () => {
-        this.setState(prev => {
-            const matrix = prev.matrix.map(row => {
-                return row.filter((v, i) => i !== prev.y);
-            });
-
-            return {
-                isRemoveRowBtnVisible: false,
-                isRemoveColBtnVisible: false,
-                matrix,
-            }
-        });
-    }
-
-    handleMouseOver = (event) => {
-        if (!(event.target instanceof HTMLTableCellElement)) return;
-
-        const x = event.target.parentNode.rowIndex;
-        const y = event.target.cellIndex;
-
-        const offsetLeft = DEFAULT_PADDING + event.target.offsetLeft;
-        const offsetTop = DEFAULT_PADDING + event.target.offsetTop;
-
-        this.setState(prev => ({
-            x,
-            y,
-            offsetLeft,
-            offsetTop,
-            isRemoveRowBtnVisible: prev.matrix.length > 1,
-            isRemoveColBtnVisible: prev.matrix[0].length > 1,
+        this.setState(({ matrix, cellIndex }) => ({
+            isRemoveRowBtnVisible: false,
+            isRemoveColBtnVisible: false,
+            matrix: matrix.map(row => {
+                return row.filter((v, i) => i !== cellIndex);
+            }),
         }));
     }
 
-    handleMouseLeave = (event) => {
-        const classList = event.relatedTarget.classList;
+    handleMouseOver = ({
+            target,
+            target: {
+                parentNode: { rowIndex },
+                cellIndex,
+                offsetLeft,
+                offsetTop
+            },
+        }) => {
+        if (!(target instanceof HTMLTableCellElement)) return;
+
+        this.setState(({ matrix }) => ({
+            rowIndex,
+            cellIndex,
+            offsetLeft: DEFAULT_PADDING + offsetLeft,
+            offsetTop: DEFAULT_PADDING + offsetTop,
+            isRemoveRowBtnVisible: matrix.length > 1,
+            isRemoveColBtnVisible: matrix[0].length > 1,
+        }));
+    }
+
+    handleMouseLeave = ({ relatedTarget: { classList } }) => {
         if (classList && classList.contains('remove')) return;
-        this.setState(() => ({
+        this.setState(({
             isRemoveRowBtnVisible: false,
             isRemoveColBtnVisible: false,
         }));
     }
 
     render() {
-        const rows = this.state.matrix.map(cells => <Row cells={cells} key={cells[0].x}/>);
+        const {
+            matrix,
+            offsetTop,
+            offsetLeft,
+            isRemoveColBtnVisible,
+            isRemoveRowBtnVisible,
+        } = this.state;
 
         return (
             <div className="main" >
                 <div className="table" onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>
                     <table>
-                        <tbody>{rows}</tbody>
+                        <tbody>
+                            {matrix.map(cells => <Row cells={cells} key={cells[0].rowIndex}/>)}
+                        </tbody>
                     </table>
                 </div>
 
                 <AddRowButton onClick={this.handleAddRowButtonClick} />
                 <AddColButton onClick={this.handleAddColButtonClick} />
 
-                {this.state.isRemoveRowBtnVisible && <RemoveRowButton offsetTop={this.state.offsetTop} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveRowButtonClick} />}
-                {this.state.isRemoveColBtnVisible && <RemoveColButton offsetLeft={this.state.offsetLeft} onMouseLeave={this.handleMouseLeave} onClick={this.handleRemoveColButtonClick} />}
+                {isRemoveRowBtnVisible && <RemoveRowButton
+                    offsetTop={offsetTop}
+                    onMouseLeave={this.handleMouseLeave}
+                    onClick={this.handleRemoveRowButtonClick}
+                />}
+                {isRemoveColBtnVisible && <RemoveColButton
+                    offsetLeft={offsetLeft}
+                    onMouseLeave={this.handleMouseLeave}
+                    onClick={this.handleRemoveColButtonClick}
+                />}
             </div>
         )
     }
