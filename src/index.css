@@ -29,6 +29,11 @@ body {
     cursor: pointer;
     color: white;
     font-weight: bold;
+    transition: left 0.25s, right 0.25s, top 0.25s, bottom 0.25s, opacity 0.75s;
+}
+
+.main .button:hover {
+    opacity: 0.5;
 }
 
 .main .add.bottom {
