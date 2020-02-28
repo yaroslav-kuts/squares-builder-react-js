@@ -4,14 +4,16 @@ import PropTypes from 'prop-types';
 import Row from './Row';
 import Button from './Button';
 
-const DEFAULT_PADDING = 41;
+const DEFAULT_SHIFT = 1;
 
 class Builder extends React.Component {
   constructor(props) {
     super(props);
 
-    const matrix = [...Array(+props.initialHeight)]
-      .map((v, rowIndex) => [...Array(+props.initialWidth)]
+    const { initialHeight, initialWidth, cellSize } = props;
+
+    const matrix = [...Array(initialHeight)]
+      .map((v, rowIndex) => [...Array(initialWidth)]
         .map((_v, cellIndex) => ({ rowIndex, cellIndex })));
 
     this.state = {
@@ -22,6 +24,7 @@ class Builder extends React.Component {
       offsetTop: 0,
       isRemoveRowBtnVisible: false,
       isRemoveColBtnVisible: false,
+      cellSize,
     };
   }
 
@@ -73,11 +76,11 @@ class Builder extends React.Component {
     }) => {
       if (!(target instanceof HTMLTableCellElement)) return;
 
-      this.setState(({ matrix }) => ({
+      this.setState(({ cellSize, matrix }) => ({
         rowIndex,
         cellIndex,
-        offsetLeft: DEFAULT_PADDING + offsetLeft,
-        offsetTop: DEFAULT_PADDING + offsetTop,
+        offsetLeft: cellSize + DEFAULT_SHIFT + offsetLeft,
+        offsetTop: cellSize + DEFAULT_SHIFT + offsetTop,
         isRemoveRowBtnVisible: matrix.length > 1,
         isRemoveColBtnVisible: matrix[0].length > 1,
       }));
@@ -98,14 +101,21 @@ class Builder extends React.Component {
         offsetLeft,
         isRemoveColBtnVisible,
         isRemoveRowBtnVisible,
+        cellSize,
       } = this.state;
 
       return (
-        <div className="main">
+        <div className="main" style={{ padding: cellSize }} >
           <div className="table" onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>
             <table>
               <tbody>
-                {matrix.map((cells) => <Row cells={cells} key={cells[0].rowIndex} />)}
+                {matrix.map((cells) => (
+                  <Row
+                    cellSize={cellSize}
+                    cells={cells}
+                    key={cells[0].rowIndex}
+                  />
+                ))}
               </tbody>
             </table>
           </div>
@@ -113,11 +123,13 @@ class Builder extends React.Component {
           <Button
             side="bottom"
             action="add"
+            cellSize={cellSize}
             onClick={this.handleAddRowButtonClick}
           />
           <Button
             side="right"
             action="add"
+            cellSize={cellSize}
             onClick={this.handleAddColButtonClick}
           />
 
@@ -126,6 +138,7 @@ class Builder extends React.Component {
             side="top"
             action="remove"
             offset={offsetTop}
+            cellSize={cellSize}
             onMouseLeave={this.handleMouseLeave}
             onClick={this.handleRemoveRowButtonClick}
           />
@@ -135,6 +148,7 @@ class Builder extends React.Component {
             side="left"
             action="remove"
             offset={offsetLeft}
+            cellSize={cellSize}
             onMouseLeave={this.handleMouseLeave}
             onClick={this.handleRemoveColButtonClick}
           />
@@ -147,7 +161,7 @@ class Builder extends React.Component {
 Builder.defaultProps = {
   initialWidth: 4,
   initialHeight: 4,
-  cellSize: 40,
+  cellSize: 50,
 };
 
 Builder.propTypes = {
